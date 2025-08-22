@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Localization Toolkit — CSV ⇄ ARB</title>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container" role="main">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">LT</div>
+        <div>
+          <div class="title">Localization Toolkit</div>
+          <div class="subtitle">Minimal • Fast • Open</div>
+        </div>
+      </div>
+      <nav class="tabs" role="tablist" aria-label="Tools">
+        <button class="tab-btn" role="tab" aria-selected="true" aria-controls="csvGen" id="tab1">Generate CSV</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="csvToArb" id="tab2">CSV → ARB</button>
+      </nav>
+    </header>
+
+    <!-- CSV Generator Panel -->
+    <section id="csvGen" role="tabpanel" aria-labelledby="tab1">
+      <div class="grid">
+        <div class="tool-card">
+          <h3 class="tool-title">CSV Generator</h3>
+          <p class="tool-description">Create a starter CSV with a <span class="kbd">greeting</span> key and auto-translate formulas for Google Sheets. Edit in your sheet, then export back to CSV.</p>
+
+          <div class="form-group">
+            <label for="baseLang" class="form-label">Base Language</label>
+            <select id="baseLang" class="form-select">
+              <option value="en">English (en)</option>
+              <option value="es">Spanish (es)</option>
+              <option value="ur">Urdu (ur)</option>
+              <option value="fr">French (fr)</option>
+              <option value="de">German (de)</option>
+              <option value="zh">Chinese (zh)</option>
+              <option value="ja">Japanese (ja)</option>
+              <option value="ar">Arabic (ar)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="targetLangSearch" class="form-label">Target Languages</label>
+            <input id="targetLangSearch" class="form-input" type="text" placeholder="Search languages..." autocomplete="off" />
+            <div id="targetLangsList" class="lang-list"></div>
+          </div>
+
+          <div class="toolbar">
+            <button class="btn" id="downloadCsvBtn">Download Sample CSV</button>
+            <span class="muted">Tip: The file contains <span class="kbd">=GOOGLETRANSLATE</span> formulas for target columns.</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h3 class="tool-title">How it works</h3>
+          <p class="tool-description">
+            The generated CSV contains columns: <strong>key</strong>, your <strong>base</strong> language, and chosen target languages. Target cells use
+            <code>GOOGLETRANSLATE($B2;"base";"target")</code> so translations fill automatically when opened in Google Sheets.
+          </p>
+          <hr class="hr" />
+          <p class="tool-description">
+            After editing values, export as CSV and use the converter on the next tab to produce <strong>.arb</strong> files
+            (e.g. <em>app_en.arb</em>, <em>app_es.arb</em>) inside a ZIP.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CSV to ARB Panel -->
+    <section id="csvToArb" role="tabpanel" aria-labelledby="tab2" hidden>
+      <div class="grid">
+        <div class="tool-card">
+          <h3 class="tool-title">CSV → ARB Converter</h3>
+          <p class="tool-description">Drop your CSV here or pick a file. The first column must be <strong>key</strong>; subsequent columns are language codes.</p>
+
+          <div class="form-group">
+            <div id="dropzone" class="dropzone" tabindex="0" aria-label="CSV Dropzone">
+              <div>
+                <div class="dropzone-content">Drop CSV file</div>
+                <div class="dropzone-hint">or click to browse</div>
+              </div>
+              <input id="csvFile" class="sr-only" type="file" accept=".csv" />
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <button class="btn" id="convertBtn">Convert to .arb ZIP</button>
+            <span id="status" class="status" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h3 class="tool-title">CSV Format</h3>
+          <p class="tool-description">
+            Example header: <code>key,en,es,ur</code>. Each row maps a key to translations.
+            Empty values are ignored. Output files are named <code>app_&lt;lang&gt;.arb</code>.
+          </p>
+          <hr class="hr" />
+          <p class="tool-description">
+            Tip: Keep keys snake_case (e.g. <code>welcome_message</code>). Avoid quotes in values. For placeholders, keep ICU style
+            (e.g. <code>{count}</code>).
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Credit -->
+  <footer class="credit">
+    <div class="credit-text" aria-label="Made with love by Jawad">
+      <span>Made with</span>
+      <span class="heart" aria-hidden="true">❤</span>
+      <span>by Jawad</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
